@@ -13,6 +13,7 @@ class SongList(APIView):
         serializer = SongSerializer(song, many=True)
         return Response(serializer.data)
 
+    # add a song
     def post(self, request):
         serializer = SongSerializer(data=request.data)
         if serializer.is_valid():
