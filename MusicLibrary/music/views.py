@@ -33,3 +33,12 @@ class SongDetail(APIView):
         song = self.get_object(pk)
         serializer = SongSerializer(song)
         return Response(serializer.data)
+
+    # update song
+    def post(self, request, pk):
+        song = self.get_object(pk)
+        serializer = SongSerializer(song, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
