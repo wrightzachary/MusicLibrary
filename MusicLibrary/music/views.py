@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
+# song list
 class SongList(APIView):
     # get all from song list
     def get(self, request):
@@ -22,6 +23,7 @@ class SongList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# song details
 class SongDetail(APIView):
     def get_object(self, pk):
         try:
@@ -49,3 +51,20 @@ class SongDetail(APIView):
         song = self.get_object(pk)
         song.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+#  like song
+class LikeSong(APIView):
+    def get_object(self, pk):
+        try:
+            return Song.objects.get(id=pk)
+        except Song.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        song = self.get_object(pk)
+        song.likes +=1
+        song.save()
+        serializer = SongSerializer(song)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
